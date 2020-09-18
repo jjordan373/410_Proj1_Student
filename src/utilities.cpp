@@ -16,6 +16,9 @@ using namespace std;
 
 //********************** private to this compilation unit **********************
 
+
+vector <process_stats> stats;
+
 //if myString does not contain a string rep of number returns o
 //if int not large enough has undefined behaviour, very fragile
 int stringToInt(const char *myString) {
