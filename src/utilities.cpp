@@ -33,13 +33,44 @@ int loadData(const char* filename, bool ignoreFirstRow) {
 
 //will sort according to user preference
 void sortData(SORT_ORDER mySortOrder) {
+	switch(mySortOrder) {
+		case CPU_TIME:
 
+	}
 }
 
 process_stats getNext() {
 	process_stats myFirst;
 
 	return myFirst;
+}
+
+bool cpusort (process_stats x, process_stats y) {
+	if (x.cpu_time < y.cpu_time) {
+		return true;
+	}
+	return false;
+}
+
+bool procnumsort (process_stats x, process_stats y) {
+	if (x.process_number < y.process_number) {
+		return true;
+	}
+	return false;
+}
+
+bool starttimesort(process_stats x, process_stats y) {
+	if (x.start_time < y.start_time) {
+		return true;
+	}
+	return false;
+}
+
+bool iotimesort(process_stats x, process_stats y) {
+	if(x.io_time < y.io_time) {
+		return true;
+	}
+	return false;
 }
 
 //returns number of process_stats structs in the vector holding them
