@@ -1,6 +1,7 @@
 /***
  * KP Utils
  */
+#include <unistd.h>
 #include <numeric>
 #include <math.h>
 #include <algorithm>
@@ -18,6 +19,10 @@ using namespace std;
 
 
 vector <process_stats> stats;
+bool cpusort (process_stats, process_stats);
+bool procnumsort (process_stats, process_stats);
+bool starttimesort (process_stats, process_stats);
+bool iotimesort (process_stats, process_stats);
 
 //if myString does not contain a string rep of number returns o
 //if int not large enough has undefined behaviour, very fragile
@@ -33,9 +38,17 @@ int loadData(const char* filename, bool ignoreFirstRow) {
 
 //will sort according to user preference
 void sortData(SORT_ORDER mySortOrder) {
-	switch(mySortOrder) {
-		case CPU_TIME:
-
+	if (mySortOrder == CPU_TIME) {
+		std::sort(stats.begin(), stats.end(), cpusort);
+	}
+	else if (mySortOrder == PROCESS_NUMBER) {
+		std::sort(stats.begin(), stats.end(), procnumsort);
+	}
+	else if (mySortOrder == START_TIME) {
+		std::sort(stats.begin(), stats.end(), starttimesort);
+	}
+	else {
+		std::sort(stats.begin(), stats.end(), iotimesort);
 	}
 }
 
@@ -46,31 +59,19 @@ process_stats getNext() {
 }
 
 bool cpusort (process_stats x, process_stats y) {
-	if (x.cpu_time < y.cpu_time) {
-		return true;
-	}
-	return false;
+	return (x.cpu_time < y.cpu_time);
 }
 
 bool procnumsort (process_stats x, process_stats y) {
-	if (x.process_number < y.process_number) {
-		return true;
-	}
-	return false;
+	return (x.process_number < y.process_number);
 }
 
 bool starttimesort(process_stats x, process_stats y) {
-	if (x.start_time < y.start_time) {
-		return true;
-	}
-	return false;
+	return (x.start_time < y.start_time);
 }
 
 bool iotimesort(process_stats x, process_stats y) {
-	if(x.io_time < y.io_time) {
-		return true;
-	}
-	return false;
+	return (x.io_time < y.io_time);
 }
 
 //returns number of process_stats structs in the vector holding them
