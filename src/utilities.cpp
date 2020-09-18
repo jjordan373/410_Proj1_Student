@@ -31,7 +31,40 @@ int stringToInt(const char *myString) {
 }
 
 int loadData(const char* filename, bool ignoreFirstRow) {
+	ifstream file;
+	file.open(filename);
+	stats.clear();
 
+	if (!file.is_open()) {
+		return COULD_NOT_OPEN_FILE;
+	}
+
+	string ln;
+	while(getline(file, ln)) {
+		if (ignoreFirstRow) {
+			ignoreFirstRow = false;
+		}
+		else {
+			stringstream sstream(ln);
+			string curr;
+			vector<string> data;
+			while (getline(sstream, curr, CHAR_TO_SEARCH_FOR)) {
+				data.push_back(curr);
+			}
+
+			if (data.size() == 4) {
+				if ((std::count(data.begin(), data.end(), "")) == 0 &&
+						(std::count(data.begin(), data.end(), " ")) == 0) {
+					process_stats stat;
+					stat.process_number = stoi(data[0]);
+					stat.start_time = stoi(data[1]);
+					stat.cpu_time = stoi(data[2]);
+					stat.io_time = stoi(data[3]);
+					stats.push_back(stat);
+				}
+			}
+		}
+	}
 	return SUCCESS;
 }
 
@@ -54,7 +87,8 @@ void sortData(SORT_ORDER mySortOrder) {
 
 process_stats getNext() {
 	process_stats myFirst;
-
+	myFirst = stats.front();
+	stats.erase(stats.begin());
 	return myFirst;
 }
 
@@ -76,7 +110,7 @@ bool iotimesort(process_stats x, process_stats y) {
 
 //returns number of process_stats structs in the vector holding them
 int getNumbRows(){
-	return 0;
+	return stats.size();
 }
 
 
